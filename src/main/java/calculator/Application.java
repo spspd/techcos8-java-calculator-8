@@ -77,7 +77,6 @@ public class Application {
         // set
         list.add(",");
         list.add(":");
-        list.add(",,");
         // Operater ,
         StringBuffer front_block = new StringBuffer();
         int sum = 0;
