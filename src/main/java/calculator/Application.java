@@ -81,8 +81,30 @@ public class Application {
         // Operater ,
         StringBuffer front_block = new StringBuffer();
         int sum = 0;
+        int start = 0;
         try{
-        for(int i = 0; i < a.length()+1; i++){
+        if(a.charAt(0) == '/' && a.charAt(1) == '/'){
+            for(int i = 2; i < a.length()-1; i++){
+                if(a.charAt(i) == '\\' && a.charAt(i+1) == 'n'){
+                    start = i+2;
+                    break;
+                }else{
+                    front_block.append(a.charAt(i));
+                }
+            }
+
+            if(start == 0){
+                throw new IllegalArgumentException();
+                // eol 안닫힘 
+            }
+            else{
+                list.add(front_block.toString());
+                front_block.setLength(0);
+            }
+        }
+
+        
+        for(int i = start; i < a.length()+1; i++){
 
             // last 
             if(i == a.length()){
@@ -99,7 +121,7 @@ public class Application {
 
             int result = check(i);
             
-            System.err.println("check : " + result);
+            // System.err.println("check : " + result);
             if(result > 0){ // "문자 처리방법"
                 if(front_block.length() > 0){
                     sum = sum + Integer.parseInt(front_block.toString());
@@ -107,7 +129,7 @@ public class Application {
                     i = i + result -1;
                 }
                 else{
-                    System.out.println("test error");
+                    // System.out.println("test error");
                     throw new IllegalArgumentException();
 
                 }
