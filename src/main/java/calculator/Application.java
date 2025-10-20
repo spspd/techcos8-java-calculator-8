@@ -1,6 +1,5 @@
 package calculator;
 
-import static org.mockito.ArgumentMatchers.isA;
 
 import java.util.ArrayList;
 
@@ -12,14 +11,15 @@ public class Application {
         char c = a.charAt(i);
 
         if( c <= '9' && c >= '0'){
-            return 1; // integer
+            return 0; // integer
         }
-        else if(check_sentence(i)){
-            return 2; // operator
+        int k = check_sentence(i);
+        if(k>0){
+            return k; // operator
         }
         return -1;
     }
-    static boolean check_sentence(int i){
+    static int check_sentence(int i){
         // 리스트의 모든 단어에 대해서 확인
         // 일치하는게 여러개라면 바로 뒤에 "숫자가 올 수있는지" 와 "가장 긴것"을 기준으로
         ArrayList<String> able = new ArrayList<String>();
@@ -30,20 +30,42 @@ public class Application {
             String target = list.get(it);
             int target_length = target.length();
             for(int j = 0; j< target_length; j++){
+                
+                if(i >= max_length  ){
+                    // 끝이 아님 확인
+                    break;
+                }
+
                 if(i+j > max_length-1){
                     break;
                 }
+
                 if(a.charAt(i+j) != target.charAt(j)){
                     break;
                 }
+
                 if(j == target_length-1){
-                    // 여기에다가 뒤에 숫자가 오도록 +
+                    if (!(a.charAt(i+j+1) <= '9' && a.charAt(i+j+1) >= '0')){
+                        // 뒤에 있는것은 확인했으니 숫자인지 확인
+                        break;
+                    }
                     able.add(target);
                 }
             }
-        }
 
-        return false;
+        }
+        int max = 0;
+        for (int j =0; j < able.size(); j++){
+            if(max < able.get(j).length()){
+                max = able.get(j).length();
+            }
+        }
+        if(able.size() >0){
+            return max;
+        }
+        else{
+            return -1;
+        }
     }
     
     public static void main(String[] args) {
@@ -55,6 +77,7 @@ public class Application {
         // set
         list.add(",");
         list.add(":");
+        list.add(",,");
         // Operater ,
         StringBuffer front_block = new StringBuffer();
         int sum = 0;
@@ -63,7 +86,7 @@ public class Application {
 
             // last 
             if(i == a.length()){
-                if(check(a.charAt(i-1)) != 1 ){
+                if(check(i-1) != 0 ){
                     throw new IllegalArgumentException();
                 }
                 else{
@@ -74,12 +97,22 @@ public class Application {
             }
 
 
-            int result = check(a.charAt(i));
-            if(result == 2){ // "문자 처리방법"
-                sum = sum + Integer.parseInt(front_block.toString());
-                front_block.setLength(0);
+            int result = check(i);
+            
+            System.err.println("check : " + result);
+            if(result > 0){ // "문자 처리방법"
+                if(front_block.length() > 0){
+                    sum = sum + Integer.parseInt(front_block.toString());
+                    front_block.setLength(0);
+                    i = i + result -1;
+                }
+                else{
+                    System.out.println("test error");
+                    throw new IllegalArgumentException();
+
+                }
             }
-            else if(result == 1){
+            else if(result == 0){
                 front_block.append(a.charAt(i));
             }
             else {
@@ -95,7 +128,7 @@ public class Application {
     }
     catch(IllegalArgumentException e){
         // error 처리
-        System.err.println(e.toString());
+        System.out.println(e.toString());
 
     }
     
