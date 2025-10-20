@@ -70,7 +70,7 @@ public class Application {
     
     public static void main(String[] args) {
 
-        // TODO: 프로그램 구현
+        
         System.out.println("덧셈할 문자열을 입력해 주세요.");
         a = camp.nextstep.edu.missionutils.Console.readLine();
 
@@ -82,7 +82,6 @@ public class Application {
         StringBuffer front_block = new StringBuffer();
         int sum = 0;
         int start = 0;
-        try{
         if(a.charAt(0) == '/' && a.charAt(1) == '/'){
             for(int i = 2; i < a.length()-1; i++){
                 if(a.charAt(i) == '\\' && a.charAt(i+1) == 'n'){
@@ -147,13 +146,7 @@ public class Application {
 
         // output
         System.out.println("결과 : " + sum);
-    }
-    catch(IllegalArgumentException e){
-        // error 처리
-        System.out.println(e.toString());
-
-    }
-    
+  
 
     }
 }
